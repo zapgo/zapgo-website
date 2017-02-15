@@ -25,6 +25,6 @@ Manual Deployment:
 4. Letsencrypt SSL setup:  
 	  `kubectl apply -f lego/00-namespace.yaml && kubectl apply -f lego/configmap.yaml && kubectl apply -f lego/deployment.yaml`  
 5. Webserver setup:  
-   - `kubectl apply -f 00-namespace.yaml && kubectl apply -f service.yaml && kubectl apply -f deployment.yaml && kubectl apply -f ingress-tls.yaml`  
+  	`kubectl apply -f 00-namespace.yaml && kubectl apply -f service.yaml && kubectl apply -f deployment.yaml && kubectl apply -f ingress-tls.yaml`  
 6. Check the external IP address and setup DNS:  
-   - `kubectl get ingress --namespace zapgo-website zapgo-website`  
+   `kubectl get ingress --namespace zapgo-website zapgo-website`  

@@ -12,7 +12,7 @@ spec:
         app: zapgo-website
     spec:
       containers:
-      - image: zapgo/zapgo-website
+      - image: zapgo/zapgo-website:latest
         imagePullPolicy: Always
         name: zapgo-website
         ports:
