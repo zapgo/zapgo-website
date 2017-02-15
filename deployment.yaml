@@ -1,0 +1,19 @@
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: zapgo-website
+  namespace: zapgo-website
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: zapgo-website
+    spec:
+      containers:
+      - image: zapgo/zapgo-website
+        imagePullPolicy: Always
+        name: zapgo-website
+        ports:
+        - containerPort: 80
