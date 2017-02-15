@@ -1,22 +1,18 @@
-Rehive Docs
-===========
-Documentation:
-----------
-1. Build the middleman container:  
-	`docker build -t docs_app .`  
-2. Build HTML:  
-	`docker run --rm -v $PWD/source:/usr/src/app/source -v $PWD/build:/usr/src/app/build -w /usr/src/app docs_app bundle exec middleman build --clean` 
-- Preview Docs:  
-	`docker-compose up`  
+ZapGo Website
+=============
+Automated Deployment:
+-----------------
+Tag commit with version number. E.g.  
+`git tag v0.1 -m 'Version 0.1'`
 	
-Deployment:
------------
+Manual Deployment:
+------------------
 ### Push to container registry:
 1. Build the static webserver:  
-   `docker build -f server/Dockerfile -t docs-server .`  
+   `docker build -f server/Dockerfile -t zapgo-website .`  
 2. Push to Container Registry:  
-   `docker tag docs-server gcr.io/zapgo-1273/docs-server:production`  
-   `gcloud docker -- push gcr.io/zapgo-1273/docs-server:production`  
+   `docker tag docs-server gcr.io/zapgo-1273/zapgo-website:latest`  
+   `gcloud docker -- push gcr.io/zapgo-1273/zapgo-website:latest`  
    
 ### Once-off setup:
 1. Create a Kubernetes Cluster
@@ -27,15 +23,15 @@ Deployment:
 	`gcloud container clusters get-credentials hosting-cluster --zone us-west1-a --project zapgo-1273`  
 4. Letsencrypt SSL setup:  
 	- Namespace:  
-	  `kubectl apply -f server/lego/00-namespace.yaml` 
+	  `kubectl apply -f /lego/00-namespace.yaml` 
 	- ConfigMap:  
-	  `kubectl apply -f server/lego/configmap.yaml` 
+	  `kubectl apply -f /lego/configmap.yaml` 
 	- LEGO Pod:  
-	  `kubectl apply -f server/lego/deployment.yaml`  
+	  `kubectl apply -f /lego/deployment.yaml`  
 5. Webserver setup:  
-   - `kubectl apply -f server/00-namespace.yaml`  
-   - `kubectl apply -f server/service.yaml`  
-   - `kubectl apply -f server/deployment.yaml`  
-   - `kubectl apply -f server/ingress-tls.yaml`  
+   - `kubectl apply -f 00-namespace.yaml`  
+   - `kubectl apply -f service.yaml`  
+   - `kubectl apply -f deployment.yaml`  
+   - `kubectl apply -f ingress-tls.yaml`  
 6. Check the external IP address and setup DNS:  
-   - `kubectl get ingress --namespace docs-server docs-server`  
+   - `kubectl get ingress --namespace zapgo-website zapgo-website`  
