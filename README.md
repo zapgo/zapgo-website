@@ -3,7 +3,8 @@ ZapGo Website
 Automated Deployment:
 -----------------
 Tag commit with version number. E.g.  
-`git tag v0.1 -m 'Version 0.1'`
+`git tag v0.1 -m 'Version 0.1'`  
+`git push origin v0.1`  
 	
 Manual Deployment:
 ------------------
