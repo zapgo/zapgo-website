@@ -10,9 +10,9 @@ Manual Deployment:
 ------------------
 ### Push to container registry:
 1. Build the static webserver:  
-   `docker build -t zapgo-website .`  
+   `docker build -t zapgo-website .`
 2. Push to Container Registry:  
-   `docker tag docs-server zapgo/zapgo-website:latest`  
+   `docker tag zapgo-website zapgo/zapgo-website:v0.002`
    `docker push zapgo/zapgo-website:latest`  
    
 ### Once-off setup:
@@ -28,3 +28,5 @@ Manual Deployment:
   	`kubectl apply -f 00-namespace.yaml && kubectl apply -f service.yaml && kubectl apply -f deployment.yaml && kubectl apply -f ingress-tls.yaml`  
 6. Check the external IP address and setup DNS:  
    `kubectl get ingress --namespace zapgo-website zapgo-website`  
+
+old: dualstack.awseb-e-b-awsebloa-conqjgo7hn4c-576052491.eu-west-1.elb.amazonaws.com.

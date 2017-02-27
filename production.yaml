@@ -1,0 +1,4 @@
+PROJECT_NAME: zapgo-website
+NAMESPACE: zapgo-website-2
+IMAGE: gcr.io/zapgo-1273/zapgo-website
+VIRTUAL_HOST: zapgo.co
