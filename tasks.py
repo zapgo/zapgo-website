@@ -5,12 +5,14 @@ import semver
 
 import os
 
+
 def format_yaml(template, config):
     # Replace in ${ENV_VAR} in template with value:
     formatted = template
     for k, v in config.items():
         formatted = formatted.replace('${%s}' % k, v)
     return formatted
+
 
 @task
 def templater(ctx, config, template='kubernetes/templates/all-in-one.yaml'):
@@ -45,27 +47,11 @@ def templater(ctx, config, template='kubernetes/templates/all-in-one.yaml'):
 
 
 @task
-def prepare(ctx):
-    """
-    Builds docs HTML
-    """
-    # check if container exists:
-    result = ctx.run('echo $(docker images -q docs_middleman)', hide='both')
-    if not result.stdout.strip():
-        # build middle man if it doesn't exist
-        ctx.run('docker-compose build middleman', echo=True)
-    # build html
-    ctx.run('docker run --rm -v $PWD/source:/usr/src/app/source -v $PWD/build:/usr/src/app/build '
-            '-w /usr/src/app docs_middleman bundle exec middleman build --clean', echo=True)
-
-
-@task
 def build(ctx, tag):
     """
     Build project's docker image
     """
-    prepare(ctx)
-    cmd = 'docker build -f server/Dockerfile -t %s .' % tag
+    cmd = 'docker build -t %s .' % tag
     ctx.run(cmd, echo=True)
 
 
@@ -79,7 +65,7 @@ def run(ctx, image, port):
     ctx.run(cmd, echo=True)
 
 
-def get_config():
+def get_config(config):
     if config[-5:] != '.yaml':
         config += '.yaml'
 
@@ -93,6 +79,7 @@ def get_config():
         config_dict = yaml.load(stream)
 
     return config_dict
+
 
 @task
 def push(ctx, config, version_tag):
@@ -165,16 +152,17 @@ def deploy(ctx, config, version_tag):
     image = '{}:{}'.format(image_name, version_tag)
 
     ctx.run('kubectl set image deployment/{} '
-            'docs-server={} --namespace={}'.format(config_dict['PROJECT_NAME'],
-                                                   image,
-                                                   config_dict['NAMESPACE']), echo=True)
+            '{}={} --namespace={}'.format(config_dict['PROJECT_NAME'],
+                                          config_dict['PROJECT_NAME'],
+                                          image,
+                                          config_dict['NAMESPACE']), echo=True)
 
 
 @task
 def live(ctx, config):
     """Checks which version_tag is live"""
     config_dict = get_config(config)
-    
+
     result = ctx.run('kubectl get deployment/{} --output=json --namespace={}'.format(config_dict['PROJECT_NAME'],
                                                                                      config_dict['NAMESPACE']),
                      echo=True,
@@ -184,4 +172,3 @@ def live(ctx, config):
     image = server_config['spec']['template']['spec']['containers'][0]['image']
     print(image)
     return image
-
