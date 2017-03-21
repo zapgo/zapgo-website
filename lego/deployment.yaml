@@ -18,6 +18,8 @@ spec:
         ports:
         - containerPort: 8080
         env:
+        - name: LEGO_DEFAULT_INGRESS_CLASS
+          value: gce
         - name: LEGO_EMAIL
           valueFrom:
             configMapKeyRef:

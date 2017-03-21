@@ -9,10 +9,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - zapgo.rehive.com
+    - zapgo.co
     secretName: zapgo-website-tls
   rules:
-  - host: zapgo.rehive.com
+  - host: zapgo.co
     http:
       paths:
       - path: /
