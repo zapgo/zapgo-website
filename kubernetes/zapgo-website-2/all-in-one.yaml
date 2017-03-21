@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zapgo-website-2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zapgo-website
+  namespace: zapgo-website-2
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  type: NodePort
+  selector:
+    app: zapgo-website
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: zapgo-website
+  namespace: zapgo-website-2
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: zapgo-website
+    spec:
+      containers:
+      - image: gcr.io/zapgo-1273/zapgo-website
+        imagePullPolicy: Always
+        name: zapgo-website
+        ports:
+        - containerPort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: zapgo-website
+  namespace: zapgo-website-2
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "gce"
+spec:
+  tls:
+  - hosts:
+    - zapgo.co
+    secretName: zapgo-website-tls
+  rules:
+  - host: zapgo.co
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: zapgo-website
+          servicePort: 80
+      - path: /*
+        backend:
+          serviceName: zapgo-website
+          servicePort: 80
